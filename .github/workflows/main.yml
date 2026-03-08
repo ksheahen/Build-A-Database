@@ -1,0 +1,20 @@
+# linting checks and other stuff so i dont forget
+on: [push]
+jobs:
+    # linting job
+    linting:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Setting up Java env
+              uses: actions/setup-java@v4
+              with:
+                distribution: 'temurin'
+                java-version: '17'
+
+            - name: Setting up Checkstyle
+              run: wget -q https://github.com/checkstyle/checkstyle/releases/download/checkstyle-13.3.0/checkstyle-13.3.0-all.jar
+            
+            - name: Running Checkstyle
+              run: java -jar checkstyle-13.3.0-all.jar -c /google_checks.xml $(find . -name "*.java")
+
