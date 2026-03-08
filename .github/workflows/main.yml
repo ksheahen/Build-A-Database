@@ -10,7 +10,7 @@ jobs:
               uses: actions/setup-java@v4
               with:
                 distribution: 'temurin'
-                java-version: '17'
+                java-version: '21'
 
             - name: Setting up Checkstyle
               run: wget -q https://github.com/checkstyle/checkstyle/releases/download/checkstyle-13.3.0/checkstyle-13.3.0-all.jar
