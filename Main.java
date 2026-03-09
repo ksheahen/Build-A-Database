@@ -13,7 +13,12 @@ public class Main {
         updateDB();
 
         // Calls the userInput() method, which loops for user input
-        userInput();
+        // NOTE: adding the exception throw fixes the nonexistent get problem but then breaks persistenceafterrestart despite it working prior like bruh what
+        try {
+            userInput();
+        } catch (Exception e) {
+            e.getMessage();
+        }
     }
 
     // SET: Creates a key value pair (append-only)
@@ -30,16 +35,16 @@ public class Main {
     }
 
     // GET: Retrieves the value associated with the given key
-    public static String get(String key) throws Exception {
-        // System.out.println("Test Get");
+    public static String get(String key) {
         for (int i = indexSize - 1; i >= 0; i--) {
             if (index[i].getKey().equals(key)) {
                 System.out.println(index[i].getValue());
                 return index[i].getValue();
             }
         }
-        System.out.println("Error: Key-Value Pair does not exist.");
+        // System.out.println("Error: Key-Value Pair does not exist.");
         return null;
+        // throw new Exception("Key not found");
     }
 
     // Update in-memory index (key-value pairs)
@@ -54,14 +59,13 @@ public class Main {
     }
 
     // Asks user for input until the program is imploded
-    public static void userInput() {
+    public static void userInput() throws Exception {
         Scanner scanner = new Scanner(System.in);
 
         // Command loop to get continued user input until EXIT
         while (true) {
             System.out.print("Build-A-DB % ");
             String input = scanner.nextLine();
-            // input = input.toUpperCase();
 
             if (input.equals("EXIT")) {
                 System.out.println("Exiting the program...");
@@ -77,10 +81,8 @@ public class Main {
             if (arguments[0].equals("SET") && arguments.length == 3) {
                 set(arguments[1], arguments[2]);
             } else if (arguments[0].equals("GET") && arguments.length == 2) {
-                try {
-                    get(arguments[1]);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                if (get(arguments[1]) == null) {
+                    throw new Exception("Error: Key-Value not found.");
                 }
             } else {
                 System.out.println("Command not found: " + input);
@@ -94,7 +96,8 @@ public class Main {
     public static void updateDB() {
 
         File database = new File("data.db");
-        if (!database.exists()) return;
+        if (!database.exists())
+            return;
 
         indexSize = 0;
 
@@ -112,7 +115,6 @@ public class Main {
             System.out.println("An error occured while creating DB file: " + e);
         }
 
-        
     }
 
 }
