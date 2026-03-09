@@ -1,9 +1,4 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 public class Main {
@@ -73,9 +68,7 @@ public class Main {
                 break;
             }
 
-            // Parse the command arguments
-            // SET has 2 arguments - key, value
-            // GET has 1 argument - key
+            // Parse the command arguments (SET: 2 args, GET: 1 arg)
             String[] arguments = input.split(" ", 3);
             if (arguments.length == 0) {
                 continue;
