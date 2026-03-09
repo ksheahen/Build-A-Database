@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) {
 
         // Initialize the DB file
-        updateDB();
+updateDB();
 
         // Calls the userInput() method, which loops for user input
         userInput();
