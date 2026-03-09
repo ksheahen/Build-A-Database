@@ -1,4 +1,7 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
@@ -11,19 +14,20 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // Initialize the DB file
+        // Calls the updateDB() method, which rebuilds the in-memory index
         updateDB();
 
         // Calls the userInput() method, which loops for user input
         userInput();
     }
 
-    // SET: Creates a key value pair
+    // SET: Creates a key value pair (append-only)
     public static void set(String key, String value) {
-        // System.out.println("Test Set");
-        try (FileWriter output = new FileWriter("data.db", true)) {
-            output.write(key + " " + value + "\n");
+        try (BufferedWriter output = new BufferedWriter(new FileWriter("data.db", true))) {
+            output.write("SET " + key + " " + value);
+            output.newLine();
             System.out.println("Debug: Writing to file...");
+            output.close();
         } catch (IOException e) {
             System.out.println("Error writing to file: " + e);
         }
@@ -31,7 +35,7 @@ public class Main {
     }
 
     // GET: Retrieves the value associated with the given key
-    public static String get(String key) {
+    public static String get(String key) throws Exception {
         // System.out.println("Test Get");
         for (int i = indexSize - 1; i >= 0; i--) {
             if (index[i].getKey().equals(key)) {
@@ -80,7 +84,11 @@ public class Main {
             if (arguments[0].equals("SET") && arguments.length == 3) {
                 set(arguments[1], arguments[2]);
             } else if (arguments[0].equals("GET") && arguments.length == 2) {
-                get(arguments[1]);
+                try {
+                    get(arguments[1]);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
             } else {
                 System.out.println("Command not found: " + input);
             }
@@ -89,20 +97,29 @@ public class Main {
         scanner.close();
     }
 
-    // this is current re-writing the file everytime so no persistance, will need to
-    // change it prob to buffered
+    // Rebuilds the in-memory index and initializes data.db if not already created
     public static void updateDB() {
 
-        try {
-            File database = new File("data.db");
-            if (database.createNewFile()) {
-                System.out.println("File created: " + database.getName());
-            } else {
-                System.out.println("Database file already exists.");
+        File database = new File("data.db");
+        if (!database.exists()) return;
+
+        indexSize = 0;
+
+        try (BufferedReader db = new BufferedReader(new FileReader("data.db"))) {
+            String input;
+            while ((input = db.readLine()) != null) {
+                String[] arguments = input.split(" ", 3);
+
+                if (arguments.length == 3 && arguments[0].equals("SET")) {
+                    updateIndex(arguments[1], arguments[2]);
+                }
             }
+            db.close();
         } catch (IOException e) {
             System.out.println("An error occured while creating DB file: " + e);
         }
+
+        
     }
 
 }
