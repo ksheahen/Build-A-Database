@@ -3,9 +3,7 @@
 ### Linting and Formatting
 
 Language Support for Java by Red Hat (VSCode Extension)
-* Use the command: ``> Format Document``
 
-CheckStyle (google_checks)
-* ``> CheckStyle: Check Code with CheckStyle``
+- Use the command: `> Format Document`
 
 Linting job auto runs on GitHub Actions (uses CheckStyle)
