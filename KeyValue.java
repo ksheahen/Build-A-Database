@@ -1,30 +1,34 @@
+/**
+ * Represents an immutable key-value pair.
+ */
 public class KeyValue {
 
-    private String key;
-    private String value;
+    private final String key;
+    private final String value;
 
-    // constructor getters setters bs that java loves
+
+    /**
+     * Constructs a Keyvalue pair.
+     * @param key the key string.
+     * @param value the value string.
+     */
     public KeyValue(String key, String value) {
         this.key = key;
         this.value = value;
     }
 
-    // Getters
+    /**
+     * @return The key string.
+     */
     public String getKey() {
         return key;
     }
 
+    /**
+     * @return The value string.
+     */
     public String getValue() {
         return value;
-    }
-
-    // Setters
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 
 }
